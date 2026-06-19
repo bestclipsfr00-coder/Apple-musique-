@@ -494,14 +494,18 @@ body {
   background:var(--bg);
 }
 #fp-blur {
-  position:absolute; inset:-30%; z-index:-1;
+  position:absolute; inset:-25%; z-index:-1;
   background:radial-gradient(ellipse at 25% 20%, var(--c1) 0%, transparent 50%),
               radial-gradient(ellipse at 75% 70%, var(--c2) 0%, transparent 50%),
               radial-gradient(ellipse at 60% 40%, var(--c1) 0%, transparent 60%);
-  opacity:0.6; filter:blur(80px);
-  transition:opacity 0.5s var(--ease), background 1.6s var(--ease);
-  will-change:background, transform;
-  animation:fpBlurDrift 24s ease-in-out infinite;
+  opacity:0.55; filter:blur(72px);
+  transition:opacity 0.6s var(--ease), background 1.2s var(--ease);
+  will-change:transform;
+  animation:fpBlurDrift 30s ease-in-out infinite;
+}
+#fp-blur.img {
+  opacity:0.92;
+  filter:blur(58px) saturate(1.55) brightness(0.8);
 }
 @keyframes fpBlurDrift {
   0%, 100% { transform:scale(1) translate(0,0); }
@@ -511,15 +515,19 @@ body {
 #full-player:not(.open) #fp-blur { opacity:0; }
 
 #fp-inner {
-  flex:1; display:flex; flex-direction:column;
+  flex:1; display:flex; flex-direction:column; align-items:center;
   overflow:hidden;
   padding-top:calc(var(--safe-t) + 10px);
-  background:linear-gradient(135deg, rgba(30,30,30,0.82), rgba(20,20,20,0.92));
-  backdrop-filter:blur(30px) saturate(180%);
-  -webkit-backdrop-filter:blur(30px) saturate(180%);
-  border:1px solid rgba(255,255,255,0.1);
-  box-shadow:0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+  background:linear-gradient(180deg,
+    rgba(8,8,12,0.6) 0%,
+    rgba(8,8,12,0.2) 32%,
+    rgba(8,8,12,0.32) 60%,
+    rgba(8,8,12,0.74) 100%);
 }
+#fp-inner > * {
+  width:100%; max-width:500px; flex-shrink:0;
+}
+#fp-inner > #fp-tab-body { flex:1 1 auto; min-height:0; }
 
 /* FP Header */
 #fp-hd {
@@ -551,28 +559,28 @@ body {
   padding:0 36px; margin-bottom:24px; flex-shrink:0;
 }
 #fp-art {
-  border-radius:18px; overflow:hidden;
+  border-radius:14px; overflow:hidden;
   background:var(--surface);
-  width:min(300px,74vw); height:min(300px,74vw);
+  width:min(300px,72vw); height:min(300px,72vw);
   box-shadow:
-    0 32px 80px rgba(0,0,0,0.65),
-    0 12px 32px var(--dynamic-color1),
-    0 0 0 0.5px rgba(255,255,255,0.08);
+    0 24px 60px rgba(0,0,0,0.55),
+    0 8px 22px rgba(0,0,0,0.4),
+    0 4px 14px var(--dynamic-color1);
   transition:transform 0.55s var(--apple-spring), box-shadow 0.55s var(--ease);
   will-change:transform;
 }
 #fp-art.playing {
   transform:scale(1);
   box-shadow:
-    0 40px 100px rgba(0,0,0,0.7),
-    0 16px 48px var(--dynamic-color1),
-    0 0 0 0.5px rgba(255,255,255,0.1);
+    0 30px 72px rgba(0,0,0,0.6),
+    0 10px 28px rgba(0,0,0,0.45),
+    0 4px 16px var(--dynamic-color1);
 }
 #fp-art.paused {
-  transform:scale(0.82);
+  transform:scale(0.93);
   box-shadow:
-    0 16px 40px rgba(0,0,0,0.5),
-    0 6px 16px var(--dynamic-color1);
+    0 18px 44px rgba(0,0,0,0.5),
+    0 6px 16px rgba(0,0,0,0.4);
 }
 #fp-art img { width:100%; height:100%; object-fit:cover; }
 #fp-art-ph {
@@ -584,27 +592,30 @@ body {
 
 /* FP Track Info */
 #fp-meta {
-  display:flex; align-items:center; padding:0 26px; gap:12px; margin-bottom:18px;
+  display:flex; align-items:center; padding:0 26px; gap:9px; margin-bottom:18px;
 }
 #fp-texts { flex:1; min-width:0; }
 #fp-title {
-  font-size:22px; font-weight:700; letter-spacing:-0.4px;
+  font-size:25px; font-weight:700; letter-spacing:-0.5px;
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
 }
 #fp-artist {
-  font-size:16px; color:rgba(255,255,255,0.62);
-  margin-top:3px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  font-size:20px; font-weight:500; color:rgba(255,255,255,0.6);
+  margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
 }
-#fp-fav {
-  width:40px; height:40px; border:none; background:transparent;
+#fp-fav, #fp-more {
+  width:38px; height:38px; border:none; border-radius:50%;
+  background:rgba(255,255,255,0.12);
   display:flex; align-items:center; justify-content:center;
-  cursor:pointer; flex-shrink:0;
-  transition:transform 0.2s var(--spring), color 0.2s;
-  color:var(--text2);
+  cursor:pointer; flex-shrink:0; color:#fff;
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+  transition:transform 0.22s var(--spring), background 0.2s, color 0.2s;
 }
-#fp-fav:active { transform:scale(1.35); }
-#fp-fav.on { color:var(--accent); }
-#fp-fav svg { width:24px; height:24px; }
+#fp-fav:hover, #fp-more:hover { background:rgba(255,255,255,0.2); }
+#fp-fav:active, #fp-more:active { transform:scale(0.86); }
+#fp-fav.on { color:var(--accent); background:rgba(252,60,68,0.18); }
+#fp-fav.on svg { fill:var(--accent); stroke:var(--accent); }
+#fp-fav svg, #fp-more svg { width:18px; height:18px; }
 
 /* FP Seek */
 #fp-seek-wrap { padding:0 26px; margin-bottom:6px; }
@@ -626,21 +637,30 @@ body {
 #fp-seek::-moz-range-thumb { width:0; height:0; border-radius:50%; background:#fff; border:none; }
 #fp-seek:hover::-moz-range-thumb, #fp-seek:active::-moz-range-thumb { width:18px; height:18px; }
 #fp-times {
-  display:flex; justify-content:space-between;
-  padding:5px 26px 0; font-size:11px; color:var(--text3); font-variant-numeric:tabular-nums;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:6px 26px 0; font-size:12px; color:var(--text3); font-variant-numeric:tabular-nums;
 }
+#fp-state {
+  font-size:11px; font-weight:600; color:var(--text2);
+  background:rgba(255,255,255,0.1); padding:2px 9px; border-radius:8px;
+  opacity:0; transform:scale(0.9);
+  transition:opacity 0.3s var(--ease), transform 0.3s var(--spring);
+  pointer-events:none;
+}
+#fp-state.show { opacity:1; transform:scale(1); }
 
 /* FP Visualizer */
 #fp-vis {
-  height:44px; margin:8px 26px 4px;
+  height:28px; margin:4px 26px 2px;
   display:flex; align-items:flex-end; gap:2px; overflow:hidden;
+  opacity:0.3;
 }
 .vbar { flex:1; border-radius:2px 2px 0 0; min-height:2px; transition:height 0.1s ease; }
 
 /* FP Controls */
 #fp-controls {
   display:flex; align-items:center; justify-content:space-between;
-  padding:12px 20px;
+  padding:10px 26px 14px;
 }
 .fp-ctrl {
   width:54px; height:54px; border-radius:50%; border:none;
@@ -652,10 +672,10 @@ body {
 .fp-ctrl:hover { background:rgba(255,255,255,0.08); transform:scale(1.06); }
 .fp-ctrl:active { transform:scale(0.82); transition:transform 0.1s var(--ease); }
 .fp-ctrl svg { width:24px; height:24px; }
-.fp-ctrl.main { width:70px; height:70px; }
+.fp-ctrl.main { width:78px; height:78px; }
 .fp-ctrl.main:hover { background:rgba(255,255,255,0.1); }
 .fp-ctrl.main:active { transform:scale(0.88); }
-.fp-ctrl.main svg { width:54px; height:54px; }
+.fp-ctrl.main svg { width:62px; height:62px; }
 .fp-ctrl.dim { color:var(--text2); }
 .fp-ctrl.dim:hover { color:var(--text1); }
 .fp-ctrl.lit { color:var(--accent); }
@@ -1574,24 +1594,27 @@ body {
       <button id="fp-fav" onclick="toggleFav(currentIdx)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
       </button>
+      <button id="fp-more" onclick="openTrackCtx(library[currentIdx]?.id, event)">
+        <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+      </button>
     </div>
     <div id="fp-seek-wrap">
       <input type="range" id="fp-seek" min="0" max="100" value="0" step="0.05">
     </div>
-    <div id="fp-times"><span id="fp-cur">0:00</span><span id="fp-dur">0:00</span></div>
+    <div id="fp-times"><span id="fp-cur">0:00</span><span id="fp-state"></span><span id="fp-dur">0:00</span></div>
     <div id="fp-vis"></div>
     <div id="fp-controls">
       <button class="fp-ctrl dim" id="fp-shuf-btn" onclick="toggleShuffle()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
       </button>
       <button class="fp-ctrl" onclick="prevTrack()">
-        <svg viewBox="0 0 24 24" fill="currentColor" style="width:32px;height:32px"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor" style="width:37px;height:37px"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
       </button>
       <button class="fp-ctrl main" id="fp-play-btn" onclick="togglePlay()">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
       </button>
       <button class="fp-ctrl" onclick="nextTrack()">
-        <svg viewBox="0 0 24 24" fill="currentColor" style="width:32px;height:32px"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor" style="width:37px;height:37px"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
       </button>
       <button class="fp-ctrl dim" id="fp-rep-btn" onclick="cycleRepeat()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
@@ -1703,6 +1726,7 @@ let eqVals = [0,0,0,0,0,0,0,0,0,0];
 let sortMode = 'dateAdded';
 let sleepTimer = null, sleepEnd = null;
 let visInterval = null;
+let _fpHasArt = false;
 let selectMode = false;
 let selectedIds = new Set();
 let _skipCount = 0;       // consecutive playback failures guard
@@ -1798,7 +1822,7 @@ function startVis() {
   for (let i=0;i<numBars;i++) {
     const b = document.createElement('div');
     b.className = 'vbar';
-    b.style.cssText = 'background:linear-gradient(to top,var(--accent),rgba(252,60,68,0.3));min-height:2px;';
+    b.style.cssText = 'background:linear-gradient(to top,rgba(255,255,255,0.55),rgba(255,255,255,0.06));min-height:2px;';
     wrap.appendChild(b);
     bars.push(b);
   }
@@ -2301,13 +2325,18 @@ function updatePlayerUI() {
   // Fav
   updateFavBtn(t);
 
-  // Colors
+  // Colors + blurred-artwork background (Apple Music Now Playing style)
   if (artURL) {
+    _fpHasArt = true;
+    $('fp-blur').style.background = `url("${artURL}") center center / cover no-repeat`;
+    $('fp-blur').classList.add('img');
     const img = new Image();
     img.crossOrigin='anonymous';
     img.onload = () => extractAndApplyColors(img);
     img.src = artURL;
   } else {
+    _fpHasArt = false;
+    $('fp-blur').classList.remove('img');
     applyColors('#555','#222');
   }
 
@@ -2342,6 +2371,8 @@ function updateArtState() {
   const a = $('fp-art');
   a.classList.toggle('playing', isPlaying);
   a.classList.toggle('paused', !isPlaying);
+  const st = $('fp-state');
+  if (st) { st.textContent = isPlaying ? '' : 'En pause'; st.classList.toggle('show', !isPlaying); }
 }
 
 function updateTrackHighlights() {
@@ -2408,8 +2439,11 @@ function applyColors(c1, c2) {
   $('blob2').style.background = c2;
   $('blob1').classList.add('active');
   $('blob2').classList.add('active');
-  $('fp-blur').style.background =
-    `radial-gradient(ellipse at 25% 20%, ${c1} 0%, transparent 50%), radial-gradient(ellipse at 75% 70%, ${c2} 0%, transparent 50%), radial-gradient(ellipse at 60% 40%, ${c1} 0%, transparent 60%)`;
+  if (!_fpHasArt) {
+    $('fp-blur').classList.remove('img');
+    $('fp-blur').style.background =
+      `radial-gradient(ellipse at 25% 20%, ${c1} 0%, transparent 50%), radial-gradient(ellipse at 75% 70%, ${c2} 0%, transparent 50%), radial-gradient(ellipse at 60% 40%, ${c1} 0%, transparent 60%)`;
+  }
 }
 
 // ─── IMPORT ────────────────────────────────────────────────
